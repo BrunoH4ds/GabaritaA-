@@ -26,10 +26,10 @@ export default function Footer() {
           <div className="flex items-center gap-2 mb-2">
             <IconMail size={20} />
             <a
-              href="mailto:contato@gabaritaai.com"
+              href="mailto:Example@gmail.com"
               className="text-blue-100 hover:text-yellow-300 transition"
             >
-              contato@gabaritaai.com
+              Example@gmail.com
             </a>
           </div>
           <div className="flex items-center gap-4 mt-4">

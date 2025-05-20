@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getQuestionByYear } from "../../../../../../../../api/getQuestoesByYear";
+import { getQuestionByYear } from "../../../../../../../../api/api";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import {
@@ -12,28 +12,16 @@ import {
 import SingleItem from "@/components/comp_home/SingleItem";
 import LoadingOrFailed from "@/components/Optional/LoadingOrFailed";
 import { useParams } from "next/navigation";
+import type { Question } from "@/types/Questoes";
 
-interface Alternative {
-  letter: string;
-  text: string;
-  isCorrect: boolean;
-  file?: string;
-}
-
-interface Question {
-  title: string;
-  index: number;
-  discipline: string;
-  language: string;
-  context: string;
-  files?: string[];
-  alternativesIntroduction?: string;
-  alternatives: Alternative[];
-  correctAlternative: string;
+type Params = {
+  year: string[] | string | undefined;
+  index: string[] | string | undefined;
+  language?: string[] | string | undefined;
 }
 
 export default function QuestionPage() {
-  const { year, index, language } = useParams();
+  const { year, index, language } = useParams<Params>();
   const [question, setQuestion] = useState<Question | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answered, setAnswered] = useState(false);
@@ -62,7 +50,7 @@ export default function QuestionPage() {
       setAnswered(true);
     }
   };
-  const currentIndex = parseInt(index);
+  const currentIndex = typeof index === 'string' ? Number.parseInt(index, 10) : 1;
 
   // Verifica se é a primeira ou última questão
   const isFirstQuestion = currentIndex === 1;

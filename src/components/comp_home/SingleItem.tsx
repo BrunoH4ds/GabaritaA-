@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface SingleItemProps {
-  year?: number;
+  year?: string[] | string | number | undefined;
   title: string;
-  index?: number;
+  index?: string[] | string | number | undefined;
   discipline?: string;
-  language?: string;
+  language?: string | null;
   image?: string;
   isQuestion?: boolean;
   hoverColor?: string; // NOVO

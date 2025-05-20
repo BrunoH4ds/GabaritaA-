@@ -1,11 +1,12 @@
 "use client";
 
-import { getProvaByYear } from "../../../../../api/getProvaByYear";
+import { getProvaByYear } from "../../../../../api/api";
 import Link from "next/link";
 import SingleItem from "@/components/comp_home/SingleItem";
 import { useState, useEffect } from "react";
 import LoadingOrFailed from "@/components/Optional/LoadingOrFailed";
 import { useParams } from "next/navigation";
+import type { Prova } from "@/types/Prova";
 
 export default function ProvaPage() {
   const { year } = useParams();
@@ -36,7 +37,7 @@ export default function ProvaPage() {
     const termAsNumber = Number(term);
 
     // Se for número válido, compara diretamente com o índice
-    if (!isNaN(termAsNumber)) {
+    if (!Number.isNaN(termAsNumber)) {
       return question.index === termAsNumber;
     }
 
@@ -154,7 +155,7 @@ export default function ProvaPage() {
       <section className="mt-5">
         <div className="flex justify-center">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full">
-            {questionsToDisplay.map((question, index) => (
+            {questionsToDisplay.map((question,index) => (
               <SingleItem
                 {...question}
                 year={year}

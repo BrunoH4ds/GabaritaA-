@@ -1,15 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SingleItem from "@/components/comp_home/SingleItem";
-import { ProvasArray } from "@/database/Provas";
+import { getAllProvas } from "../../../../api/api";
+import LoadingOrFailed from "@/components/Optional/LoadingOrFailed";
+import type { Prova } from "@/types/AllProvas";
 
-export default function provaspage() {
+export default function ProvasPage() {
   const [search, setSearch] = useState("");
+  const [prova, setProva] = useState<Prova[] | null>(null);
 
-  const filteredProvas = ProvasArray.filter((prova) =>
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getAllProvas();
+      setProva(data);
+    }
+    fetchData();
+  }, []);
+
+  if (!prova) {
+    return <LoadingOrFailed />;
+  }
+
+  const filteredProvas = prova.filter((prova: Prova) =>
     prova.year.toString().includes(search)
   );
+
   return (
     <div>
       {/* Input de busca */}
@@ -24,15 +40,15 @@ export default function provaspage() {
              focus:ring focus:ring-blue-300 dark:focus:ring-yellow-500"
         placeholder="Pesquisar por ano..."
       />
-
       {/* Grid centralizado */}
       <div className="flex justify-center mt-5">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full">
-          {filteredProvas.map((currObj, index) => (
+          {filteredProvas.map((currObj: Prova, index: number) => (
             <SingleItem {...currObj} key={`${currObj.title}-${index}`} />
           ))}
         </div>
       </div>
+         
     </div>
   );
 }
