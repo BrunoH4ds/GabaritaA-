@@ -11,7 +11,7 @@ import type { Prova } from "@/types/Prova";
 export default function ProvaPage() {
   const { year } = useParams();
   const [prova, setProva] = useState<Prova | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("null");
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
 
@@ -78,61 +78,68 @@ export default function ProvaPage() {
       </section>
 
       {/* Idiomas */}
-      <section className="mt-5 bg-blue-50 dark:bg-blue-950 rounded-md p-5 gap-5">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-yellow-300 mb-3">
-          Escolha o idioma:
-        </h2>
-        <ul className="flex flex-col md:flex-row gap-3">
-          {prova.languages?.map((lang) => {
-            const isSelected = selectedLanguage === lang.value;
+      {prova.languages?.length > 0 && (
+        <section className="mt-5 bg-blue-50 dark:bg-blue-950 rounded-md p-5 gap-5">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-yellow-300 mb-3">
+            Escolha o idioma:
+          </h2>
+          <ul className="flex flex-col md:flex-row gap-3">
+            {prova.languages.map((lang) => {
+              const isSelected = selectedLanguage === lang.value;
 
-            return (
-              <li
-                key={lang.value}
-                onClick={() => setSelectedLanguage(lang.value)}
-                className={`
-                  relative flex-1 p-4 rounded-md text-xl font-bold text-center text-white shadow-md cursor-pointer transition overflow-hidden bg-center bg-cover
-                  ${
-                    lang.value === "ingles"
-                      ? 'bg-[url("/Flag/UnitedStatesFlag.jpg")]'
-                      : ""
-                  }
-                  ${
-                    lang.value === "espanhol"
-                      ? 'bg-[url("/Flag/EspanishFlag.jpg")]'
-                      : ""
-                  }
-                  ${
-                    isSelected
-                      ? "ring-3 ring-blue-600 dark:ring-yellow-400"
-                      : ""
-                  }
-                  group
-                `}
-              >
-                <div className="absolute inset-0 bg-blue-700 dark:bg-yellow-600 opacity-0 group-hover:opacity-50 transition-opacity duration-300 z-0" />
-                <span className="relative z-10">{lang.label}</span>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
+              return (
+                <li
+                  key={lang.value}
+                  onClick={() => setSelectedLanguage(lang.value)}
+                  className={`
+              relative flex-1 p-4 rounded-md text-xl font-bold text-center text-white shadow-md cursor-pointer transition overflow-hidden bg-center bg-cover
+              ${
+                lang.value === "ingles"
+                  ? 'bg-[url("/Flag/UnitedStatesFlag.jpg")]'
+                  : ""
+              }
+              ${
+                lang.value === "espanhol"
+                  ? 'bg-[url("/Flag/EspanishFlag.jpg")]'
+                  : ""
+              }
+              ${isSelected ? "ring-3 ring-blue-600 dark:ring-yellow-400" : ""}
+              group
+            `}
+                >
+                  <div className="absolute inset-0 bg-blue-700 dark:bg-yellow-600 opacity-0 group-hover:opacity-50 transition-opacity duration-300 z-0" />
+                  <span className="relative z-10">{lang.label}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* Botão de ação */}
       <section className="mt-5">
-        {selectedLanguage ? (
-          <Link href={`/provaenem/${year}/questao/1/${selectedLanguage}`}>
+        {prova.languages?.length > 0 ? (
+          selectedLanguage !== "null" ? (
+            <Link href={`/provaenem/${year}/questao/1/${selectedLanguage}`}>
+              <button className="w-full cursor-pointer bg-blue-50 dark:bg-yellow-300 text-blue-700 dark:text-gray-900 border border-blue-600 dark:border-yellow-500 font-semibold px-6 py-3 rounded-lg hover:bg-blue-100 dark:hover:bg-yellow-400 transition">
+                Fazer Prova
+              </button>
+            </Link>
+          ) : (
+            <button
+              disabled
+              className="w-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-400 dark:border-gray-600 font-semibold px-6 py-3 rounded-lg cursor-not-allowed"
+            >
+              Selecione um idioma para começar
+            </button>
+          )
+        ) : (
+          // Quando não há idiomas, ainda assim o botão leva pra URL com "null"
+          <Link href={`/provaenem/${year}/questao/1/null`}>
             <button className="w-full cursor-pointer bg-blue-50 dark:bg-yellow-300 text-blue-700 dark:text-gray-900 border border-blue-600 dark:border-yellow-500 font-semibold px-6 py-3 rounded-lg hover:bg-blue-100 dark:hover:bg-yellow-400 transition">
-              Fazer Prova
+              Iniciar Prova
             </button>
           </Link>
-        ) : (
-          <button
-            disabled
-            className="w-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-400 dark:border-gray-600 font-semibold px-6 py-3 rounded-lg cursor-not-allowed"
-          >
-            Selecione um idioma para começar
-          </button>
         )}
       </section>
 
@@ -155,7 +162,7 @@ export default function ProvaPage() {
       <section className="mt-5">
         <div className="flex justify-center">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full">
-            {questionsToDisplay.map((question,index) => (
+            {questionsToDisplay.map((question, index) => (
               <SingleItem
                 {...question}
                 year={year}

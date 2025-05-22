@@ -18,7 +18,7 @@ type Params = {
   year: string[] | string | undefined;
   index: string[] | string | undefined;
   language?: string[] | string | undefined;
-}
+};
 
 export default function QuestionPage() {
   const { year, index, language } = useParams<Params>();
@@ -36,7 +36,6 @@ export default function QuestionPage() {
         setQuestion(data);
       }
     };
-
     fetchQuestion();
   }, [year, index, language]);
 
@@ -50,7 +49,8 @@ export default function QuestionPage() {
       setAnswered(true);
     }
   };
-  const currentIndex = typeof index === 'string' ? Number.parseInt(index, 10) : 1;
+  const currentIndex =
+    typeof index === "string" ? Number.parseInt(index, 10) : 1;
 
   // Verifica se é a primeira ou última questão
   const isFirstQuestion = currentIndex === 1;
